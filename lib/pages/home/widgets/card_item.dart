@@ -79,7 +79,7 @@ class CardItem extends StatelessWidget {
                     DetailTitleWidget(index: index, title: title),
                     const SizedBox(height: 10),
                     // Progress Indicator
-                    DetailProgressIndicator(index: index),
+                    DetailProgressIndicator(index: index, percentage: 24),
                   ],
                 ),
               ),

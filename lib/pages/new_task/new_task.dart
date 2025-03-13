@@ -1,5 +1,6 @@
 import 'package:animation_example/models/task.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class NewTaskPage extends StatefulWidget {
   final Size deviceSize;
@@ -105,7 +106,7 @@ class _NewTaskPageState extends State<NewTaskPage>
                         onPressed: () {
                           Navigator.of(
                             context,
-                          ).pop(Task(title: _controller.text));
+                          ).pop(Task(title: _controller.text, id: Uuid().v4()));
                         },
                         child: Icon(Icons.add, color: Colors.white, size: 24),
                       ),
