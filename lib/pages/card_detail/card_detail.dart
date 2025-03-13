@@ -26,6 +26,10 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
   late Animation<double> _contentHeightAnimation;
 
   final GlobalKey<AnimatedListState> _listKey = GlobalKey<AnimatedListState>();
+
+  final ScrollController _scrollController = ScrollController();
+  bool _canDismissWithDrag = true;
+
   final List<Task> _tasks = [
     Task(title: 'Meet Clients'),
     Task(title: 'Design Sprint'),
@@ -67,6 +71,20 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
         curve: Curves.easeOut,
       ),
     );
+
+    // Add listener to scroll controller to determine when to enable/disable swipe to dismiss
+    _scrollController.addListener(() {
+      if (_scrollController.position.pixels <= 0) {
+        // Only allow dismissal when scrolled to the top
+        setState(() {
+          _canDismissWithDrag = true;
+        });
+      } else {
+        setState(() {
+          _canDismissWithDrag = false;
+        });
+      }
+    });
 
     // Start FAB and the height animation when the page loads
     Future.delayed(const Duration(milliseconds: 600), () {
@@ -122,12 +140,17 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
               ),
               actions: [MoreButton(index: widget.index)],
             ),
-            body: GestureDetector(
-              onVerticalDragEnd: (details) {
-                if (details.primaryVelocity! > 0) {
-                  // Swipe down
+            body: NotificationListener<ScrollNotification>(
+              onNotification: (notification) {
+                if (_canDismissWithDrag &&
+                    notification is ScrollUpdateNotification &&
+                    notification.metrics.pixels <= 0 &&
+                    notification.dragDetails != null &&
+                    notification.dragDetails!.primaryDelta! > 10) {
                   _dismissPage();
+                  return true;
                 }
+                return false;
               },
               child: TweenAnimationBuilder<double>(
                 tween: Tween(begin: 0.7, end: 1.0),
@@ -136,6 +159,8 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                   return Material(
                     color: Colors.transparent,
                     child: SingleChildScrollView(
+                      controller: _scrollController,
+                      physics: const AlwaysScrollableScrollPhysics(),
                       child: Padding(
                         padding: const EdgeInsets.symmetric(horizontal: 16.0),
                         child: Column(
