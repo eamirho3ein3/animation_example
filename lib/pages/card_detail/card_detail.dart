@@ -1,3 +1,4 @@
+import 'package:animation_example/models/task.dart';
 import 'package:animation_example/pages/card_detail/bloc/card_detail_bloc.dart';
 import 'package:animation_example/pages/card_detail/widgets/task_item.dart';
 import 'package:animation_example/pages/new_task/new_task.dart';
@@ -14,7 +15,13 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class DetailPage extends StatefulWidget {
   final int index;
   final String title;
-  const DetailPage({super.key, required this.index, required this.title});
+  final List<Task> tasks;
+  const DetailPage({
+    super.key,
+    required this.index,
+    required this.title,
+    required this.tasks,
+  });
 
   @override
   State<DetailPage> createState() => _DetailPageState();
@@ -89,7 +96,7 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return BlocProvider<DetailBloc>(
-      create: (context) => DetailBloc(),
+      create: (context) => DetailBloc(initialTasks: widget.tasks),
       child: PopScope(
         canPop: false,
         onPopInvokedWithResult: (context, result) {
@@ -165,7 +172,10 @@ class _DetailPageState extends State<DetailPage> with TickerProviderStateMixin {
                           TaskIcon(icon: Icons.work, index: widget.index),
                           const SizedBox(height: 16),
                           // Task count
-                          TaskCountWidget(index: widget.index, taskCount: 12),
+                          TaskCountWidget(
+                            index: widget.index,
+                            taskCount: _detailBloc!.tasks.length,
+                          ),
                           const SizedBox(height: 4),
                           // Task title
                           DetailTitleWidget(

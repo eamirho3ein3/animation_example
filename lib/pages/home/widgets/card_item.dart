@@ -1,3 +1,4 @@
+import 'package:animation_example/models/task.dart';
 import 'package:animation_example/pages/card_detail/card_detail.dart';
 import 'package:animation_example/pages/widgets/detail_progress.dart';
 import 'package:animation_example/pages/widgets/detail_title.dart';
@@ -9,16 +10,16 @@ import 'package:flutter/material.dart';
 class CardItem extends StatelessWidget {
   final int index;
   final String title;
-  final int taskCount;
-  final double progress;
+  final int progress;
   final bool isSelected;
+  final List<Task> tasks;
 
   const CardItem({
     super.key,
     required this.index,
     required this.title,
-    required this.taskCount,
     required this.progress,
+    required this.tasks,
     this.isSelected = false,
   });
 
@@ -73,13 +74,13 @@ class CardItem extends StatelessWidget {
                     ),
                     const Spacer(),
                     // Task Count
-                    TaskCountWidget(index: index, taskCount: taskCount),
+                    TaskCountWidget(index: index, taskCount: tasks.length),
                     const SizedBox(height: 5),
                     // Task Title
                     DetailTitleWidget(index: index, title: title),
                     const SizedBox(height: 10),
                     // Progress Indicator
-                    DetailProgressIndicator(index: index, percentage: 24),
+                    DetailProgressIndicator(index: index, percentage: progress),
                   ],
                 ),
               ),
@@ -98,7 +99,7 @@ class CardItem extends StatelessWidget {
         reverseTransitionDuration: const Duration(milliseconds: 600),
         pageBuilder:
             (context, animation, secondaryAnimation) =>
-                DetailPage(index: index, title: title),
+                DetailPage(index: index, title: title, tasks: tasks),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return FadeTransition(opacity: animation, child: child);
         },

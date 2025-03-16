@@ -1,4 +1,7 @@
+import 'package:animation_example/models/category.dart';
+import 'package:animation_example/models/task.dart';
 import 'package:animation_example/pages/home/widgets/card_item.dart';
+import 'package:animation_example/services/extentions.dart';
 import 'package:flutter/material.dart';
 
 final List<Color> backgroundColors = [
@@ -21,6 +24,61 @@ class _HomePageState extends State<HomePage> {
 
   int _currentIndex = 0;
   Color _backgroundColor = Colors.blue;
+
+  final List<Category> categories = [
+    Category(
+      title: 'Work',
+      tasks: [
+        Task(id: '1', title: 'Meet Clients'),
+        Task(id: '2', title: 'Design Sprint', isCompleted: true),
+        Task(id: '3', title: 'Icon Set Design for Mobile App'),
+        Task(id: '4', title: 'HTML/CSS Study'),
+        Task(id: '5', title: 'Weekly Report'),
+        Task(id: '6', title: 'Design Meeting'),
+        Task(id: '7', title: 'Quick Prototyping'),
+      ],
+    ),
+    Category(
+      title: 'Home',
+      tasks: [
+        Task(id: '1', title: 'Meet Clients'),
+        Task(id: '2', title: 'Design Sprint', isCompleted: true),
+        Task(id: '3', title: 'Icon Set Design for Mobile App'),
+        Task(id: '4', title: 'HTML/CSS Study'),
+      ],
+    ),
+    Category(
+      title: 'Personal',
+      tasks: [
+        Task(id: '1', title: 'Meet Clients'),
+        Task(id: '2', title: 'Design Sprint', isCompleted: true),
+        Task(id: '3', title: 'Icon Set Design for Mobile App'),
+        Task(id: '4', title: 'HTML/CSS Study'),
+        Task(id: '5', title: 'Weekly Report'),
+        Task(id: '6', title: 'Design Meeting'),
+      ],
+    ),
+    Category(
+      title: 'Personal',
+      tasks: [
+        Task(id: '4', title: 'HTML/CSS Study'),
+        Task(id: '5', title: 'Weekly Report'),
+        Task(id: '6', title: 'Design Meeting'),
+      ],
+    ),
+    Category(title: 'Personal', tasks: [Task(id: '1', title: 'Meet Clients')]),
+    Category(
+      title: 'Personal',
+      tasks: [
+        Task(id: '1', title: 'Meet Clients'),
+        Task(id: '2', title: 'Design Sprint', isCompleted: true),
+        Task(id: '3', title: 'Icon Set Design for Mobile App'),
+        Task(id: '4', title: 'HTML/CSS Study'),
+        Task(id: '5', title: 'Weekly Report'),
+        Task(id: '6', title: 'Design Meeting'),
+      ],
+    ),
+  ];
 
   @override
   void initState() {
@@ -103,14 +161,10 @@ class _HomePageState extends State<HomePage> {
                     itemCount: backgroundColors.length,
                     itemBuilder: (context, index) {
                       return CardItem(
+                        tasks: categories[index].tasks,
                         index: index,
-                        title:
-                            index == 0
-                                ? 'Work'
-                                : (index == 1 ? 'Home' : 'Personal'),
-                        taskCount: index == 0 ? 12 : (index == 1 ? 7 : 5),
-                        progress:
-                            index == 0 ? 0.24 : (index == 1 ? 0.45 : 0.15),
+                        title: categories[index].title,
+                        progress: categories[index].tasks.completedPercentage,
                         isSelected: _currentIndex == index,
                       );
                     },
